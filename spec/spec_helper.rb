@@ -16,4 +16,5 @@ Netaxept.configure do |config|
   config.netaxept_token   = NETAXEPT_TEST_TOKEN
   config.default_currency = "SEK"
   config.environment      = :test
+  config.debug            = false
 end

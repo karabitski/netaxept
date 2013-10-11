@@ -10,6 +10,11 @@ module Netaxept
         instance_variable_set(:"@#{key}", options[key] ||
           Netaxept.instance_variable_get(:"@#{key}"))
       end
+
+      unless debug
+        HTTPI.log       = false
+        HTTPI.log_level = :info
+      end
     end
 
     # Compares client options to a Hash of requested options

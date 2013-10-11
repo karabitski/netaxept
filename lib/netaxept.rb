@@ -28,7 +28,6 @@ module Netaxept
       unless defined?(@client) && @client.same_options?(options)
         @client = Netaxept::Client.new(options)
       end
-
       @client
     end
 
