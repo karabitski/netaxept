@@ -13,9 +13,10 @@ Gem::Specification.new do |s|
   s.has_rdoc    = true
 
   s.rubyforge_project = "netaxept"
-  
-  s.add_dependency "httparty", "~>0.7"
-  
+
+  s.add_dependency "httpi"
+  s.add_dependency "nori"
+
   s.add_development_dependency "rake"
   s.add_development_dependency "rspec"
   s.add_development_dependency "rdoc"
