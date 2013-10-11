@@ -95,21 +95,22 @@ module Netaxept
     end
 
     def register_response(klazz, params)
-      get_response klazz, "Netaxept/Register.aspx", params
+      get_response klazz, params
     end
 
     def process_response(klazz, params)
-      get_response klazz, "Netaxept/Process.aspx", params
+      get_response klazz, params
     end
 
-    def get_response(klazz, path, params)
-      response = HTTPI.get(create_request path, params)
+    def get_response(klazz, params)
+      response = HTTPI.get(create_request params)
       klazz.new(parser.parse(response.body))
     end
 
-    def create_request(path, params = {})
-      request = HTTPI::Request.new :url => "#{base_uri}/#{path}"
-      # request.headers = {:user_agent => user_agent}
+    def create_request(params = {})
+      api_path = "/Netaxept/#{api_page}.aspx"
+      request = HTTPI::Request.new :url => File.join(base_uri, api_path)
+      request.headers = {"User-Agent" => user_agent}
       request.query = {
         :MerchantID => merchant_id,
         :token => netaxept_token,
@@ -117,6 +118,14 @@ module Netaxept
       }.merge(params)
 
       request
+    end
+
+    def api_page
+      if RUBY_VERSION >= '2.0'
+        caller_locations(4, 1)[0].label.gsub("_response", "")
+      else
+        caller[0] =~ /`([^']*)'/ and $1
+      end
     end
 
     def parser
@@ -127,7 +136,8 @@ module Netaxept
     # The terminal url for a given transaction id
 
     def terminal_url(transaction_id)
-      "#{base_uri}terminal/default.aspx?MerchantID=#{merchant_id}&TransactionID=#{transaction_id}"
+      path = "/terminal/default.aspx?MerchantID=#{merchant_id}&TransactionID=#{transaction_id}"
+      File.join(base_uri, path)
     end
   end
 end
