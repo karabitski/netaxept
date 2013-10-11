@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mhenrixon/netaxept.png)](https://travis-ci.org/mhenrixon/netaxept)
+
 Installation
 -----------
 run
