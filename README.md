@@ -13,12 +13,18 @@ Usage
 
 First step is to tell Netaxept your credentials and the desired mode:
 
-    Netaxept::Service.authenticate <merchant id>, <token>
-    Netaxept::Service.environment =  :test|:production
+```ruby
+Netaxept.configure do |config|
+  config.merchant_id      = ENV["NETAXEPT_MERCHANT_ID"]
+  config.netaxept_token   = ENV["NETAXEPT_TOKEN"]
+  config.default_currency = "SEK"
+  config.environment      = :test|:production
+end
+```
 
-To interact with Netaxept you need to create an instance of `Netaxept::Service`:
+To interact with Netaxept you need to create an instance of `Netaxept.client
 
-    service = Netaxept::Service.new
+    client = Netaxept.client
 
 ### General
 
@@ -35,20 +41,24 @@ for details).
 
 #### Registering a payment
 
-    service.register <amount in cents>, <order number>, <options>
+```ruby
+client.register <amount in cents>, <order number>, <options>
+```
 
 Required options are `CurrencyCode` (3 letter ISO code) and `redirectUrl`.
 
 On success the response object gives you a `transaction_id`.
-You pass that to `Netaxept::Service.terminal_url(<transaction id>)` to get the URL for redirecting the user.
+You pass that to `client.terminal_url(<transaction id>)`
 
 For details on the options see http://www.betalingsterminal.no/Netthandel-forside/Teknisk-veiledning/API/Register/
 
 #### Completing a payment
 
-After the user has authorized the payment on the Netaxept site he is redirected to the `redirectUrl` you provided. Netaxept adds a `resonseCode` and `transactionId` parameter to the URL. To finalize the payment you call `sale` on the service.
+After the user has authorized the payment on the Netaxept site he is redirected to the `redirectUrl` you provided. Netaxept adds a `resonseCode` and `transactionId` parameter to the URL. To finalize the payment you call `sale` on the client.
 
-    service.sale <transaction id>, <amount in cents>
+```ruby
+client.sale <transaction id>, <amount in cents>
+```
 
 The response is a `Responses::SaleResponse` which only has the `success?` and `errors` methods mentioned under _General_.
 
@@ -60,4 +70,4 @@ Testing
 To run the tests:
 
     $ bundle
-    $ rake MERCHANT_ID=<your merchant id> NETAXEPT_TOKEN=<your token>
+    $ MERCHANT_ID=<your merchant id> NETAXEPT_TOKEN=<your token> bundle exec rspec
