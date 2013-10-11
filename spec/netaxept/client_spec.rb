@@ -1,8 +1,8 @@
 require "spec_helper"
 
-describe Netaxept::Client do
+describe Netaxept::Client, :vcr do
 
-  let(:client) { Netaxept::Client.new }
+  let(:client) { netaxept_client }
 
   describe ".register" do
 
