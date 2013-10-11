@@ -1,3 +1,10 @@
+language: ruby
+bundler_args: --without development
+gemfile:
+  - Gemfile
+before_install:
+  - gem update --system
+  - gem --version
 rvm:
   - 1.9.2
   - 1.9.3
