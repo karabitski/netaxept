@@ -1,4 +1,12 @@
 require 'rubygems'
+require 'coveralls'
+
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+  SimpleCov::Formatter::HTMLFormatter,
+  Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start
+
 require 'bundler/setup'
 
 require 'netaxept' # and any other gems you need
