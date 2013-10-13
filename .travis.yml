@@ -1,5 +1,0 @@
-language: ruby
-bundler_args: --without development
-script: "MERCHANT_ID=WHATEVER NETAXEPT_TOKEN=WHATEVER bundle exec rake spec"
-rvm:
-  - 2.0.0

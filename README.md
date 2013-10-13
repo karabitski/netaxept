@@ -1,5 +1,8 @@
-[![Build Status](https://travis-ci.org/mhenrixon/netaxept.png)](https://travis-ci.org/mhenrixon/netaxept)
+[![Build Status](https://circleci.com/gh/mhenrixon/netaxept.png?circle-token=908def2d4311fcbe28d2caabccaa703e2835cf37)](https://circleci.com/gh/mhenrixon/netaxept/tree/master)
+[![Coverage Status](https://coveralls.io/repos/mhenrixon/netaxept/badge.png)](https://coveralls.io/r/mhenrixon/netaxept)
 
+
+10202ac415ba19212bcb009def2b60edf64f798e
 Installation
 -----------
 run
