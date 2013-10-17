@@ -1,5 +1,7 @@
 require 'httpi'
 require 'nori'
+require 'hashie'
+
 module Netaxept
   class Client
     include Netaxept::Configurable
@@ -36,7 +38,7 @@ module Netaxept
         :language => 'sv_SE'
       }.merge(options)
 
-      register_response Responses::RegisterResponse, params
+      register_response params
     end
 
     ##
@@ -49,7 +51,7 @@ module Netaxept
         :operation => 'SALE'
       }
 
-      process_response Responses::SaleResponse, params
+      process_response params
     end
 
     ##
@@ -62,7 +64,7 @@ module Netaxept
         :operation => 'AUTH'
       }
 
-      process_response Responses::AuthResponse, params
+      process_response params
     end
 
     ##
@@ -75,7 +77,7 @@ module Netaxept
         :operation => 'CAPTURE',
       }
 
-      process_response Responses::CaptureResponse, params
+      process_response params
     end
 
     ##
@@ -88,7 +90,7 @@ module Netaxept
         :operation => 'CREDIT'
       }
 
-      process_response Responses::CreditResponse, params
+      process_response params
     end
 
     def annul(transaction_id)
@@ -97,30 +99,39 @@ module Netaxept
         :operation => 'ANNUL'
       }
 
-      process_response Responses::AnnulResponse, params
+      process_response params
     end
 
-    def register_response(klazz, params)
-      get_response klazz, params
+    def register_response(params)
+      get_response params
     end
 
-    def process_response(klazz, params)
-      get_response klazz, params
+    def process_response(params)
+      get_response params
     end
 
-    def get_response(klazz, params)
-      response = HTTPI.get(create_request params)
-      klazz.new(parser.parse(response.body))
+    def get_response(params)
+      type      = api_page
+      request   = build_request File.join(base_uri, api_path(type)), params
+      response  = HTTPI.get(request)
+      body      = parser.parse(response.body)
+
+      client_response = if res = body["#{type}_response".to_sym]
+        res
+      else
+        body[:exception]
+      end
+
+      Hashie::Mash.new(client_response)
     end
 
-    def create_request(params = {})
-      api_path = "/Netaxept/#{api_page}.aspx"
-      request = HTTPI::Request.new :url => File.join(base_uri, api_path)
+    def build_request(url, params = {})
+      request = HTTPI::Request.new url: url
       request.headers = {"User-Agent" => user_agent}
       request.query = {
-        :MerchantID => merchant_id,
-        :token => netaxept_token,
-        :currencyCode => default_currency,
+        merchantId:  merchant_id,
+        token:  netaxept_token,
+        currencyCode:  default_currency,
       }.merge(params)
 
       request
@@ -128,14 +139,18 @@ module Netaxept
 
     def api_page
       if RUBY_VERSION >= '2.0'
-        caller_locations(4, 1)[0].label.gsub("_response", "")
+        caller_locations(3, 1)[0].label.gsub("_response", "")
       else
         caller[0] =~ /`([^']*)'/ and $1
       end
     end
 
+    def api_path(type)
+      "/Netaxept/#{type}.aspx"
+    end
+
     def parser
-      @parser ||= Nori.new
+      @parser ||= Nori.new(strip_namespaces: true, convert_tags_to: ->(tag){tag.snakecase.to_sym})
     end
 
     ##

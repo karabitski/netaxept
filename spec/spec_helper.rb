@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'simplecov'
 require 'coveralls'
+require 'pry'
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
   SimpleCov::Formatter::HTMLFormatter,

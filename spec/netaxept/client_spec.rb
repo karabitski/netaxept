@@ -25,7 +25,7 @@ describe Netaxept::Client, :vcr do
       let(:response) { client.register(0, 12, :redirectUrl => "http://localhost:3000/order/1/return") }
 
       it "is not a success" do
-        response.should fail.with_message("Transaction amount must be greater than zero.")
+        expect(response).to fail.with_message("Transaction amount must be greater than zero.")
       end
 
       it "does not have a transaction id" do

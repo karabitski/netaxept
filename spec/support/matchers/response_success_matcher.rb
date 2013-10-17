@@ -1,18 +1,17 @@
 RSpec::Matchers.define :be_successful do
 
   match do |response|
-    response.success?
+    response.error.nil?
   end
-  
+
   failure_message_for_should do |response|
-    errors = response.errors.map(&:message).join(", ")
-    "#{response} should be successful, got error(s): #{errors}"
+    "#{response} should be successful, got error(s): #{response.error.message}"
   end
-  
+
   failure_message_for_should_not do |response|
     "#{response} should not be successful"
   end
-  
+
 end
 
 RSpec::Matchers.define :fail do
@@ -21,27 +20,26 @@ RSpec::Matchers.define :fail do
   end
 
   match do |response|
-    @failure = !response.success?
-    
+    @failure = response.error
+
     if(@message)
-      @failure && response.errors.map(&:message).include?(@message)
+      @failure && @failure.message == @message
     else
       @failure
     end
-    
+
   end
-  
+
   failure_message_for_should do |response|
-    errors = response.errors.map(&:message).join(", ")
     if(@message)
       "#{response} should have error message: #{@message}"
     else
       "#{response} should not be successful"
     end
   end
-  
+
   failure_message_for_should_not do |response|
     "#{response} should be successful"
   end
-  
+
 end

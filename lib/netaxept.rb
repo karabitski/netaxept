@@ -9,14 +9,6 @@ module Netaxept
   require 'netaxept/configurable'
   require 'netaxept/client'
   require 'netaxept/default'
-  require 'netaxept/error_message'
-  require 'netaxept/responses/response'
-  require 'netaxept/responses/register_response'
-  require 'netaxept/responses/sale_response'
-  require 'netaxept/responses/auth_response'
-  require 'netaxept/responses/capture_response'
-  require 'netaxept/responses/credit_response'
-  require 'netaxept/responses/annul_response'
 
   class << self
     include Netaxept::Configurable
