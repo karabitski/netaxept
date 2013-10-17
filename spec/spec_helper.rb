@@ -43,7 +43,7 @@ VCR.configure do |c|
     # TODO: Track down UTF-8 issue and remove
     preserve_exact_body_bytes: true,
     decode_compressed_response: true,
-    record: :all # ENV['CI'] ? :none : :once
+    record: ENV['CI'] ? :none : :once
   }
   c.cassette_library_dir = 'spec/cassettes'
   c.hook_into :webmock
