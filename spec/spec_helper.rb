@@ -43,7 +43,7 @@ VCR.configure do |c|
     # TODO: Track down UTF-8 issue and remove
     preserve_exact_body_bytes: true,
     decode_compressed_response: true,
-    record: ENV['TRAVIS'] ? :none : :once
+    record: :all # ENV['CI'] ? :none : :once
   }
   c.cassette_library_dir = 'spec/cassettes'
   c.hook_into :webmock
@@ -63,8 +63,8 @@ end
 
 def netaxept_client
   Netaxept::Client.new({
-    merchant_id: NETAXEPT_TEST_MERCHANT_ID,
-    netaxept_token: NETAXEPT_TEST_TOKEN,
+    merchant_id: test_merchant_id,
+    netaxept_token: test_netaxept_token,
     default_currency: 'SEK',
     debug: false,
     environment: :test

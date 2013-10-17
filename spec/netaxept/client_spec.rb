@@ -47,8 +47,8 @@ describe Netaxept::Client, :vcr do
       mechanic = Mechanize.new
       mechanic.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       mechanic.get(url) do |page|
-        form = page.form_with(:name => "form1")
-        cc_form = form.click_button(form.button_with(:value => /^Neste/)).form_with(:name => "form1") do |form|
+        form = page.form_with(:id => "form1")
+        cc_form = form.click_button(form.button_with(:value => /^Nästa/)).form_with(:id => "form1") do |form|
 
           form.field_with(:id => "cardNo").value = "4925000000000004"
           form.field_with(:id => "month").options.last.tick

@@ -33,6 +33,7 @@ module Netaxept
       params = {
         :amount => amount,
         :orderNumber => order_id,
+        :language => 'sv_SE'
       }.merge(options)
 
       register_response Responses::RegisterResponse, params
@@ -119,7 +120,7 @@ module Netaxept
       request.query = {
         :MerchantID => merchant_id,
         :token => netaxept_token,
-        :CurrencyCode => default_currency
+        :currencyCode => default_currency,
       }.merge(params)
 
       request

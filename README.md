@@ -50,7 +50,7 @@ for details).
 client.register <amount in cents>, <order number>, <options>
 ```
 
-Required options are `CurrencyCode` (3 letter ISO code) and `redirectUrl`.
+Required options are `currencyCode` (3 letter ISO code) and `redirectUrl`.
 
 On success the response object gives you a `transaction_id`.
 You pass that to `client.terminal_url(<transaction id>)`
