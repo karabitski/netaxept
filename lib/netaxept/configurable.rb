@@ -7,6 +7,7 @@ module Netaxept
       :merchant_id,
       :netaxept_token,
       :default_currency,
+      :language,
       :environment,
       :user_agent,
       :debug,

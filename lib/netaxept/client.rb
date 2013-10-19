@@ -33,10 +33,11 @@ module Netaxept
     def register(amount, order_id, options = {})
 
       params = {
-        :amount => amount,
-        :orderNumber => order_id,
-        :language => 'sv_SE'
-      }.merge(options)
+        amount: amount,
+        orderNumber: order_id,
+        redirectUrl: options[:redirect_url],
+        language: options.fetch(:language) { language },
+      }
 
       register_response params
     end
