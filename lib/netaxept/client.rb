@@ -140,7 +140,7 @@ module Netaxept
 
     def api_page
       if RUBY_VERSION >= '2.0'
-        caller_locations(3, 1)[0].label.gsub("_response", "")
+        caller_locations(2, 1)[0].label.gsub("_response", "")
       else
         caller[0] =~ /`([^']*)'/ and $1
       end

@@ -31,6 +31,12 @@ module Netaxept
         ENV['NETAXEPT_MERCHANT_ID']
       end
 
+      # Netaxept merchant id from ENV or configuration
+      # @return [String]
+      def language
+        ENV['NETAXEPT_LANGUAGE'] || 'no_NO'
+      end
+
       # Netaxept merchant password from ENV or configuration
       # @return [String]
       def netaxept_token
