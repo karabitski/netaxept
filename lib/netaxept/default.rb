@@ -64,7 +64,7 @@ module Netaxept
       end
 
       def log_level
-        :warning
+        :warn
       end
 
       def logger
