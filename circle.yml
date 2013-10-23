@@ -1,6 +1,3 @@
 machine:
   ruby:
     version: 2.0.0-p247
-test:
-  override:
-    - MERCHANT_ID=WHATEVER NETAXEPT_TOKEN=WHATEVER bundle exec rspec --color --profile spec
