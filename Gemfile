@@ -4,6 +4,7 @@ source "http://rubygems.org"
 gemspec
 
 gem 'rake'
+gem 'activesupport', '~> 4.0.1.rc2'
 
 group :development do
   gem 'awesome_print', require: 'ap'

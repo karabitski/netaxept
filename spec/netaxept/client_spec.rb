@@ -36,9 +36,48 @@ describe Netaxept::Client, :vcr do
 
   end
 
+  context "when auth or sale fails" do
+    let(:transaction_id) { client.register(20101, 12, redirect_url: "http://localhost:3000/order/1/return").transaction_id }
+
+    before do
+      # Register some card data with the transaction.
+      url = client.terminal_url(transaction_id)
+      mechanic = Mechanize.new
+      mechanic.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      mechanic.get(url) do |page|
+        form = page.form_with(:id => "form1")
+        cc_form = form.click_button(form.button_with(:value => /^Next/)).form_with(:id => "form1") do |form|
+
+          form.field_with(:id => "cardNo").value = Netaxept::CreditCards.fails_auth_and_sale_no
+          form.field_with(:id => "month").options.last.tick
+          form.field_with(:id => "year").options.last.tick
+          form.field_with(:id => "securityCode").value = "111"
+
+        end
+        mechanic.redirect_ok = false
+        cc_form.click_button(cc_form.button_with(:id => "okButton"))
+      end
+    end
+
+   describe "a valid query request" do
+
+      it "is a success" do
+        response = client.sale(transaction_id, 20100)
+        query    = client.query(transaction_id)
+        error    = query.error
+
+        expect(error.operation).to eq "Sale"
+        expect(error.response_code).to eq "99"
+        expect(error.response_text).to include "Auth Reg Comp Failure"
+        expect(error.response_source).to eq "Netaxept"
+      end
+
+    end
+  end
+
   context "with a transaction id" do
 
-    let(:transaction_id) { client.register(20100, 12, :redirectUrl => "http://localhost:3000/order/1/return").transaction_id }
+    let(:transaction_id) { client.register(20100, 12, redirect_url: "http://localhost:3000/order/1/return").transaction_id }
 
     before do
 
@@ -48,9 +87,9 @@ describe Netaxept::Client, :vcr do
       mechanic.agent.http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       mechanic.get(url) do |page|
         form = page.form_with(:id => "form1")
-        cc_form = form.click_button(form.button_with(:value => /^Nästa/)).form_with(:id => "form1") do |form|
+        cc_form = form.click_button(form.button_with(:value => /^Next/)).form_with(:id => "form1") do |form|
 
-          form.field_with(:id => "cardNo").value = "4925000000000004"
+          form.field_with(:id => "cardNo").value = Netaxept::CreditCards.valid_no
           form.field_with(:id => "month").options.last.tick
           form.field_with(:id => "year").options.last.tick
           form.field_with(:id => "securityCode").value = "111"

@@ -10,7 +10,8 @@ SimpleCov.start
 
 require 'bundler/setup'
 
-require 'netaxept' # and any other gems you need
+require 'netaxept'
+require 'netaxept/test_helpers'
 require "netaxept_credentials"
 
 require "mechanize"
@@ -66,7 +67,10 @@ def netaxept_client
     merchant_id: test_merchant_id,
     netaxept_token: test_netaxept_token,
     default_currency: 'SEK',
-    debug: false,
-    environment: :test
+    log: true,
+    log_level: :debug,
+    # logger: STDOUT,
+    environment: :test,
+    language: 'en_GB'
   })
 end

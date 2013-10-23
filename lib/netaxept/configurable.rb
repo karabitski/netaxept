@@ -10,8 +10,11 @@ module Netaxept
       :language,
       :environment,
       :user_agent,
+      :base_uri,
       :debug,
-      :base_uri
+      :log,
+      :logger,
+      :log_level
     ]
 
     attr_accessor(*CONFIGURATION_KEYS)
@@ -44,6 +47,10 @@ module Netaxept
       Netaxept::Configurable.keys.each do |key|
         instance_variable_set(:"@#{key}", Netaxept::Default.options[key])
       end
+
+      HTTPI.logger    = self.logger if self.logger
+      HTTPI.log       = self.log || self.debug
+      HTTPI.log_level = self.log_level
       self
     end
     alias setup reset!

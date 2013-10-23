@@ -1,21 +1,19 @@
 require 'httpi'
 require 'nori'
 require 'hashie'
+require 'netaxept/communication_normalizer'
 
 module Netaxept
   class Client
     include Netaxept::Configurable
+    include Netaxept::CommunicationNormalizer
+
 
     def initialize(options = {})
       # Use options passed in, but fall back to module defaults
       Netaxept::Configurable.keys.each do |key|
         instance_variable_set(:"@#{key}", options[key] ||
           Netaxept.instance_variable_get(:"@#{key}"))
-      end
-
-      unless debug
-        HTTPI.log       = false
-        HTTPI.log_level = :info
       end
     end
 
@@ -32,12 +30,11 @@ module Netaxept
 
     def register(amount, order_id, options = {})
 
-      params = {
+      params = options.reverse_merge({
         amount: amount,
-        orderNumber: order_id,
-        redirectUrl: options[:redirect_url],
-        language: options.fetch(:language) { language },
-      }
+        order_number: order_id,
+        language: language,
+      })
 
       register_response params
     end
@@ -48,7 +45,7 @@ module Netaxept
     def sale(transaction_id, amount)
       params = {
         :amount => amount,
-        :transactionId => transaction_id,
+        :transaction_id => transaction_id,
         :operation => 'SALE'
       }
 
@@ -61,7 +58,7 @@ module Netaxept
     def auth(transaction_id, amount)
       params = {
         :amount => amount,
-        :transactionId => transaction_id,
+        :transaction_id => transaction_id,
         :operation => 'AUTH'
       }
 
@@ -74,7 +71,7 @@ module Netaxept
     def capture(transaction_id, amount)
       params = {
         :amount => amount,
-        :transactionId => transaction_id,
+        :transaction_id => transaction_id,
         :operation => 'CAPTURE',
       }
 
@@ -86,21 +83,33 @@ module Netaxept
 
     def credit(transaction_id, amount)
       params = {
-        :amount => amount,
-        :transactionId => transaction_id,
-        :operation => 'CREDIT'
+        amount: amount,
+        transaction_id: transaction_id,
+        operation: 'CREDIT'
       }
 
       process_response params
     end
 
+    ##
+    # Credits an amount of an already captured order to the credit card
+
+    def query(transaction_id)
+      params = {transaction_id: transaction_id}
+      query_response params
+    end
+
     def annul(transaction_id)
       params = {
-        :transactionId => transaction_id,
+        :transaction_id => transaction_id,
         :operation => 'ANNUL'
       }
 
       process_response params
+    end
+
+    def query_response(params)
+      get_response params
     end
 
     def register_response(params)
@@ -114,6 +123,9 @@ module Netaxept
     def get_response(params)
       type      = api_page
       request   = build_request File.join(base_uri, api_path(type)), params
+      if debug
+
+      end
       response  = HTTPI.get(request)
       body      = parser.parse(response.body)
 
@@ -123,17 +135,18 @@ module Netaxept
         body[:exception]
       end
 
-      Hashie::Mash.new(client_response)
+      client_response ||= body[:payment_info]
+      Hashie::Mash.new(deep_underscore(client_response))
     end
 
     def build_request(url, params = {})
       request = HTTPI::Request.new url: url
       request.headers = {"User-Agent" => user_agent}
-      request.query = {
-        merchantId:  merchant_id,
+      request.query = deep_camelize({
+        merchant_id:  merchant_id,
         token:  netaxept_token,
-        currencyCode:  default_currency,
-      }.merge(params)
+        currency_code:  default_currency,
+      }.merge(params))
 
       request
     end

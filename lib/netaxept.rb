@@ -1,8 +1,8 @@
 # This gem wraps the current Netaxept REST api in a nice fashion
 #
-# Author::    Håkon Lerring (mailto:hakon@powow.no)
-# Copyright:: Copyright © 2011 Powow AS
-# License::   TODO!
+# Author::    Mikael Henriksson (mailto:mikael@zoolutions.se)
+# Copyright:: No fucking copyright here. Use it and abuse it steal as much as you want!
+# License::   TODO: do I really need to enter something here?
 
 module Netaxept
   require 'netaxept/version'

@@ -59,6 +59,18 @@ module Netaxept
         false
       end
 
+      def log
+        false
+      end
+
+      def log_level
+        :warning
+      end
+
+      def logger
+        # STDOUT
+      end
+
       # Default User-Agent header string from ENV or {USER_AGENT}
       # @return [String]
       def user_agent
