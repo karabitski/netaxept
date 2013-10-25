@@ -155,7 +155,7 @@ module Netaxept
       if RUBY_VERSION >= '2.0'
         caller_locations(2, 1)[0].label.gsub("_response", "")
       else
-        caller[0] =~ /`([^']*)'/ and $1
+        caller[1].match(/`([^']*)'/)[1].gsub("_response", "")
       end
     end
 
