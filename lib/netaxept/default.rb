@@ -49,9 +49,9 @@ module Netaxept
 
       def base_uri
         if environment == :production
-          "https://epayment.bbs.no/"
+          "https://epayment.nets.eu/"
         else
-          "https://epayment-test.bbs.no/"
+          "https://test.epayment.nets.eu/"
         end
       end
 

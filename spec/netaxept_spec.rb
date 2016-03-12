@@ -16,20 +16,20 @@ describe Netaxept do
   end
 
   describe ".environment" do
-    it "sets the base_uri to https://epayment.bbs.no/ when set to production" do
+    it "sets the base_uri to https://epayment.nets.eu/ when set to production" do
       Netaxept.configure do |config|
         config.environment = :production
       end
 
-      expect(Netaxept.base_uri).to eq "https://epayment.bbs.no/"
+      expect(Netaxept.base_uri).to eq "https://epayment.nets.eu/"
     end
 
-    it "sets the base_uri to https://epayment-test.bbs.no/ when set to test" do
+    it "sets the base_uri to https://test.epayment.nets.eu/ when set to test" do
       Netaxept.configure do |config|
         config.environment = :test
       end
 
-      expect(Netaxept.base_uri).to eq "https://epayment-test.bbs.no/"
+      expect(Netaxept.base_uri).to eq "https://test.epayment.nets.eu/"
     end
   end
 
@@ -38,13 +38,13 @@ describe Netaxept do
 
   #   it "returns the terminal url if you pass a transaction id" do
   #     Netaxept::Client.should_receive(:merchant_id).and_return("123133")
-  #     Netaxept::Client.terminal_url("deadbeef00").should == "https://epayment-test.bbs.no/terminal/default.aspx?MerchantID=123133&TransactionID=deadbeef00"
+  #     Netaxept::Client.terminal_url("deadbeef00").should == "https://test.epayment.nets.eu/terminal/default.aspx?MerchantID=123133&TransactionID=deadbeef00"
   #   end
 
   #   it "has a production terminal url if the environment is production" do
   #     Netaxept::Client.environment = :production
   #       Netaxept::Client.should_receive(:merchant_id).and_return("123133")
-  #       Netaxept::Client.terminal_url("deadbeef00").should == "https://epayment.bbs.no/terminal/default.aspx?MerchantID=123133&TransactionID=deadbeef00"
+  #       Netaxept::Client.terminal_url("deadbeef00").should == "https://epayment.nets.eu/terminal/default.aspx?MerchantID=123133&TransactionID=deadbeef00"
   #     Netaxept::Client.environment = :test
   #   end
 

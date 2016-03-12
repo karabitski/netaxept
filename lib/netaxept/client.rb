@@ -29,7 +29,6 @@ module Netaxept
     # Registers the order parameters with netaxept. Returns a Responses::RegisterResponse
 
     def register(amount, order_id, options = {})
-
       params = options.reverse_merge({
         amount: amount,
         order_number: order_id,
