@@ -134,6 +134,7 @@ module Netaxept
         body[:exception]
       end
 
+      client_response ||= body[:generic_error]
       client_response ||= body[:payment_info]
       Hashie::Mash.new(deep_underscore(client_response))
     end
