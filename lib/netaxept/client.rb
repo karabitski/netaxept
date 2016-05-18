@@ -43,7 +43,7 @@ module Netaxept
 
     def sale(transaction_id, amount)
       params = {
-        :amount => amount,
+        :transaction_amount => amount,
         :transaction_id => transaction_id,
         :operation => 'SALE'
       }
@@ -56,7 +56,7 @@ module Netaxept
 
     def auth(transaction_id, amount)
       params = {
-        :amount => amount,
+        :transaction_amount => amount,
         :transaction_id => transaction_id,
         :operation => 'AUTH'
       }
@@ -69,7 +69,7 @@ module Netaxept
 
     def capture(transaction_id, amount)
       params = {
-        :amount => amount,
+        :transaction_amount => amount,
         :transaction_id => transaction_id,
         :operation => 'CAPTURE',
       }
@@ -82,7 +82,7 @@ module Netaxept
 
     def credit(transaction_id, amount)
       params = {
-        amount: amount,
+        transaction_amount: amount,
         transaction_id: transaction_id,
         operation: 'CREDIT'
       }
