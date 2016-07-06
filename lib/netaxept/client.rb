@@ -39,15 +39,28 @@ module Netaxept
     end
 
     ##
+    # Verifies saved credit card
+
+    def verify(transaction_id)
+      params = {
+        :updateStoredPaymentInfo => "true",
+        :transaction_id => transaction_id,
+        :operation => 'VERIFY'
+      }
+
+      process_response params
+    end
+
+
+    ##
     # Captures the whole amount instantly
 
-    def sale(transaction_id, amount)
+    def sale(transaction_id, amount = nil)
       params = {
-        :transaction_amount => amount,
         :transaction_id => transaction_id,
         :operation => 'SALE'
       }
-
+      params.merge(transaction_amount: amount) if amount
       process_response params
     end
 
